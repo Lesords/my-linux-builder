@@ -46,11 +46,24 @@ init_file_profile() {
 }
 
 init_file_rcS() {
-    echo '#! /bin/sh'           >> etc/init.d/rcS
-    echo ''                     >> etc/init.d/rcS
-    echo '/bin/mount -a'        >> etc/init.d/rcS
-    echo ''                     >> etc/init.d/rcS
-    echo 'echo "rcS done here"' >> etc/init.d/rcS
+    cat << EOF >> etc/init.d/rcS
+#!/bin/sh
+
+/bin/mount -a
+
+mount -o remount, rw /
+
+mkdir -p /mnt/shared && \
+mount -t 9p -o trans=virtio,version=9p2000.L host0 /mnt/shared
+
+echo "rcS done here"
+EOF
+}
+
+init_file_passwd() {
+    cat << EOF >> etc/passwd
+root:x:0:0:root:/root:/bin/sh
+EOF
 }
 
 init_etc() {
@@ -58,6 +71,8 @@ init_etc() {
     touch etc/inittab && init_file_inittab && echo "create etc/inittab file done"
     touch etc/profile && init_file_profile && echo "create etc/profile file done"
     mkdir -p etc/init.d/ && touch etc/init.d/rcS && init_file_rcS && echo  "create etc/init.d/rcS done"
+
+    touch etc/passwd && init_file_passwd && echo "create etc/passwd file done"
 
     chmod 755 etc/init.d/rcS
 }
@@ -74,6 +89,7 @@ init_busybox() {
     if [ "$busyboxPath" -a -d $busyboxPath/$busyboxFile ]; then
         sudo cp -rf $busyboxPath/$busyboxFile/* $1 && \
             echo "$busyboxPath/$busyboxFile copy done here!!!"
+        sudo chmod 4755 $1/bin/busybox
         sudo umount $1 && echo "umount $1 done here"
     else
         echo "not include busybox file!!!"
@@ -91,7 +107,7 @@ main() {
     fi
 
     mkdir $DirNameTmp && cd $DirNameTmp && echo "entering $DirNameTmp..."
-    mkdir {dev/,etc/,lib/,proc/,sys/,tmp/}
+    mkdir {dev/,etc/,lib/,proc/,sys/,tmp/,root/}
 
     init_dev
     init_etc
