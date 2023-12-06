@@ -23,26 +23,32 @@ init_ext3() {
 }
 
 init_file_fstab() {
-    echo "proc        /proc   proc    defaults    0   0" >> etc/fstab
-    echo "tmpfs       /tmp    tmpfs   defaults    0   0" >> etc/fstab
-    echo "sysfs       /sys    sysfs   defaults    0   0" >> etc/fstab
+    cat << EOF >> etc/fstab
+proc        /proc   proc    defaults    0   0
+tmpfs       /tmp    tmpfs   defaults    0   0
+sysfs       /sys    sysfs   defaults    0   0
+EOF
 }
 
 init_file_inittab() {
-    echo "::sysinit:/etc/init.d/rcS"        >> etc/inittab
-    echo "::respawn:-/bin/sh"               >> etc/inittab
-    echo "tty2::askfirst:-/bin/sh"          >> etc/inittab
-    echo "::ctrlaltdel:/bin/umount -a -r"   >> etc/inittab
+    cat << EOF >> etc/inittab
+::sysinit:/etc/init.d/rcS
+::respawn:-/bin/sh
+tty2::askfirst:-/bin/sh
+::ctrlaltdel:/bin/umount -a -r
+EOF
 }
 
 init_file_profile() {
-    echo '# /etc/profile: system-wide .profile file for the Bourne shells' >> etc/profile
-    echo ''                                         >> etc/profile
-    echo 'echo'                                     >> etc/profile
-    echo 'echo -n "Processing /etc/profile... "'    >> etc/profile
-    echo '# no-op'                                  >> etc/profile
-    echo 'echo "Done"'                              >> etc/profile
-    echo 'echo'                                     >> etc/profile
+    cat << EOF >> etc/profile
+# /etc/profile: system-wide .profile file for the Bourne shells
+
+echo
+echo -n "Processing /etc/profile... "
+# no-op
+echo "Done"
+echo
+EOF
 }
 
 init_file_rcS() {
