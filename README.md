@@ -36,7 +36,7 @@ The file structure is as follows:
 test
 ├── busybox
 │   └── _install
-└── init.sh
+└── qemu-start.sh
 ```
 
 ## Test
@@ -46,5 +46,5 @@ Put the image and root file system in the test folder
 Then, run
 
 ```bash
-./init.sh
+./qemu-start.sh
 ```
