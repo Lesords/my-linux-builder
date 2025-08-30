@@ -98,7 +98,9 @@ init_busybox() {
         sudo chmod 4755 $1/bin/busybox
         sudo umount $1 && echo "umount $1 done here"
     else
-        echo "not include busybox file!!!"
+        sudo umount $1
+        echo "Error: not include busybox file!!!"
+        exit 1
     fi
 }
 
@@ -118,7 +120,7 @@ main() {
     init_dev
     init_etc
 
-    cd .. && sudo cp -rf $DirNameTmp/* $DirName && echo "copy file done here"
+    cd .. && sudo cp -rf $DirNameTmp/* $DirName && echo "copy file done here" && echo
     rm -rf $DirNameTmp
 
     init_busybox $DirName
