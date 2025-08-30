@@ -41,7 +41,14 @@ test
 
 ## Test
 
-Put the image and root file system in the test folder
+Put the image and root file system in the test folder, like this:
+
+```bash
+test/
+├── bzImage
+├── qemu-start.sh
+└── rootfs.img
+```
 
 Then, run
 
